@@ -87,6 +87,16 @@ def test_readme_lists_free_edition_steps():
     assert "offer_log_train" in text
 
 
+def test_gcp_readme_lists_colab_and_bigquery():
+    text = (ROOT / "gcp" / "README_GCP.md").read_text(encoding="utf-8")
+    assert "BigQuery" in text
+    assert "Colab" in text
+    assert "ancillary_lab" in text
+    assert "offer_log_raw" in text
+    assert "offer_log_train" in text
+    assert "run_ingest_and_train.ipynb" in text
+
+
 def test_committed_train_parquet_matches_training_features():
     frame = pd.read_parquet(ROOT / "data" / "offer_log_train.parquet")
     assert set(GENERATOR_ONLY).isdisjoint(frame.columns)

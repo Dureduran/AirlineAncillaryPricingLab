@@ -44,6 +44,12 @@ Historical results → train New Model → test against Current Pricing → smal
 
 See [databricks/README_DATABRICKS.md](databricks/README_DATABRICKS.md).
 
+**Offline path (Google Cloud — Colab + BigQuery)**
+
+Same offer log → ingest training columns into BigQuery `ancillary_lab` → train New Model in Colab or Vertex AI Workbench → export `new_model/model.joblib` → the Streamlit lab scores that artifact. Paid Vertex Prediction is not required.
+
+See [gcp/README_GCP.md](gcp/README_GCP.md) and the Colab notebook [gcp/run_ingest_and_train.ipynb](gcp/run_ingest_and_train.ipynb).
+
 ## Language
 
 User-facing copy uses Current Pricing, New Model, Business Rules, Rollout Decision, Return to Current Pricing, and Pricing Test Results.

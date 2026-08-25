@@ -193,7 +193,7 @@ def build():
                     s["cell"],
                 ),
                 Paragraph(
-                    "P(buy | price, booking context), then Price x P(buy) on an allowed grid. Trained on Databricks; scored in the lab from an exported artifact.",
+                    "P(buy | price, booking context), then Price x P(buy) on an allowed grid. Trained on Databricks Free and Google Cloud (Colab + BigQuery); scored in the lab from an exported artifact.",
                     s["cell"],
                 ),
             ],
@@ -304,7 +304,7 @@ def build():
     )
     story.append(
         Paragraph(
-            "Trained P(buy | price, booking context) on Databricks, selected price by expected revenue, and compared Current vs New on simulated offer logs (synthetic + public data).",
+            "Trained P(buy | price, booking context) on Databricks and Google Cloud (Colab + BigQuery), selected price by expected revenue, and compared Current vs New on simulated offer logs (synthetic + public data).",
             s["body"],
         )
     )

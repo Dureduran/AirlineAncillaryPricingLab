@@ -12,7 +12,7 @@ Most airlines already price ancillaries in-house. The job is not “build a mode
 
 **Current Pricing** — simulated existing system using route, days to departure, product, channel, and remaining inventory.
 
-**New Model** — P(buy | price, booking context), then Price × P(buy) on an allowed grid. Trained on Databricks Free; scored in the lab from an exported artifact.
+**New Model** — P(buy | price, booking context), then Price × P(buy) on an allowed grid. Trained on Databricks Free and Google Cloud (Colab + BigQuery); scored in the lab from an exported artifact.
 
 Business Rules always finish the job (included-in-fare, loyalty, min/max, inventory, airport vs online bags, temporary RM caps). Example: recommend USD 175, cap USD 150, customer sees USD 150.
 
