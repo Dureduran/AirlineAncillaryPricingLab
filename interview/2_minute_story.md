@@ -1,0 +1,23 @@
+# Ancillary Pricing Production Lab — 2-minute story
+
+Independent portfolio prototype using synthetic and public data. No airline internal data, systems or proprietary pricing logic are used. This lab is not affiliated with any carrier.
+
+Start with:
+
+"Most airlines already have an in-house ancillary dynamic-pricing capability, so I didn't want to build another dashboard that simply predicts a price. I built a small production lab showing how I would evaluate a new pricing model against the current approach, introduce it safely, measure its commercial impact and monitor whether it should remain live."
+
+Then show, in this order:
+
+**Price Explanation**  
+"Here is why the New Model recommends a different extra-legroom price than Current Pricing on SIN–LHR Economy Basic, four days out. Both prices are in USD."
+
+**Pricing Controls**  
+"Revenue Management controls where and how aggressively it can operate — traffic percent, price band, pause, or Return to Current Pricing. Not per-passenger approval."
+
+**Pricing Test Results**  
+"We measure whether the New Model actually increases revenue versus Current Pricing without damaging conversion. Out loud: Simulated result using synthetic/public data."
+
+**Production Monitor**  
+"If customer behaviour changes or model quality deteriorates, we HOLD expansion or Return to Current Pricing. Checkout still has a fallback: New Model → Current Pricing → simple rules → safe fixed price."
+
+Done. Do not open with network-wide yield metrics or overbooking.
