@@ -12,11 +12,11 @@ Most airlines already have an in-house ancillary dynamic-pricing capability. Thi
 
 Public GitHub: [Dureduran/AirlineAncillaryPricingLab](https://github.com/Dureduran/AirlineAncillaryPricingLab)
 
-Live lab: [https://dureduran.github.io/AirlineAncillaryPricingLab/](https://dureduran.github.io/AirlineAncillaryPricingLab/)
+Live lab: [https://dureduran.github.io/AirlineAncillaryPricingLab/index.html](https://dureduran.github.io/AirlineAncillaryPricingLab/index.html)
 
 Executive walkthrough: [docs/walkthrough.html](https://dureduran.github.io/AirlineAncillaryPricingLab/walkthrough.html)
 
-One-page brief: [interview/one_page_brief.pdf](https://dureduran.github.io/AirlineAncillaryPricingLab/one_page_brief.pdf)
+One-page brief: [docs/brief.html](https://dureduran.github.io/AirlineAncillaryPricingLab/brief.html) ([PDF](https://github.com/Dureduran/AirlineAncillaryPricingLab/blob/main/docs/one_page_brief.pdf))
 
 ## Quick start
 

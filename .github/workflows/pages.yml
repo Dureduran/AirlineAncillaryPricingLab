@@ -1,8 +1,8 @@
 name: pages
 
+# Pages is published from the /docs folder on main (Settings → Pages).
+# Keep this workflow as a manual fallback only so it cannot overwrite that source.
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 permissions:

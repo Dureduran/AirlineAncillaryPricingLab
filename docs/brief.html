@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ancillary Pricing Production Lab — one-page brief</title>
+  <meta name="description" content="One-page interview brief: test, roll out, and monitor machine-learning pricing for extra baggage and extra-legroom seats." />
+  <style>
+    :root {
+      --navy: #1B2838;
+      --gold: #4A90A4;
+      --ink: #1A2A3A;
+      --muted: #4A6074;
+      --paper: #F7F4EE;
+      --rule: #D5DEE6;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      color: var(--ink);
+      background: #e8e4dc;
+    }
+    .page {
+      max-width: 800px;
+      margin: 0 auto;
+      background: var(--paper);
+      min-height: 100vh;
+    }
+    header {
+      background: var(--navy);
+      color: #E8EEF4;
+      padding: 1.1rem 1.5rem 1rem;
+      border-bottom: 4px solid var(--gold);
+    }
+    .kicker {
+      letter-spacing: 0.14em;
+      font-size: 0.72rem;
+      color: var(--gold);
+      font-family: Calibri, Arial, sans-serif;
+      font-weight: 700;
+    }
+    h1 { font-size: 1.45rem; margin: 0.35rem 0 0.25rem; font-weight: 600; }
+    .sub { margin: 0; color: #D5DEE6; font-style: italic; font-size: 0.95rem; }
+    .wrap { padding: 1.1rem 1.5rem 1.4rem; }
+    h2 { font-size: 1.02rem; margin: 1rem 0 0.4rem; color: var(--navy); }
+    p, li { font-size: 0.95rem; line-height: 1.45; margin: 0 0 0.55rem; }
+    .pair {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.7rem;
+      margin: 0.7rem 0 0.9rem;
+    }
+    .box {
+      border: 1px solid var(--gold);
+      background: #fff;
+      padding: 0.7rem 0.8rem;
+    }
+    .box h3 { margin: 0 0 0.35rem; font-size: 0.88rem; color: var(--navy); }
+    .box p { margin: 0; font-size: 0.88rem; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    th { text-align: left; width: 28%; padding: 0.35rem 0.4rem 0.35rem 0; vertical-align: top; color: var(--navy); }
+    td { padding: 0.35rem 0; vertical-align: top; border-bottom: 1px solid var(--rule); }
+    .honesty { color: var(--muted); font-style: italic; font-size: 0.88rem; }
+    footer {
+      background: var(--navy);
+      color: #9BB0C3;
+      padding: 0.7rem 1.5rem;
+      font-size: 0.8rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    footer a { color: var(--gold); }
+    @media (max-width: 640px) {
+      .pair { grid-template-columns: 1fr; }
+      footer { flex-direction: column; }
+    }
+    @media print {
+      body { background: white; }
+      .page { max-width: none; }
+      footer { color: #333; background: white; border-top: 2px solid var(--navy); }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div class="kicker">ANCILLARY PRICING PRODUCTION LAB</div>
+      <h1>Testing, safely rolling out and monitoring ML pricing</h1>
+      <p class="sub">Extra baggage and extra-legroom seats &nbsp;|&nbsp; Current Pricing vs New Model &nbsp;|&nbsp; Business Rules keep final control</p>
+    </header>
+    <div class="wrap">
+      <p>Most airlines already price ancillaries in-house. The job is not to build a model that prints a price. It is to test a <b>New Model</b> against <b>Current Pricing</b>, keep <b>Business Rules</b> in control, roll out in traffic steps, and HOLD or <b>Return to Current Pricing</b> when the model is not healthy.</p>
+
+      <div class="pair">
+        <div class="box">
+          <h3>Current Pricing</h3>
+          <p>Simulated existing system using route, days to departure, product, channel, and remaining inventory.</p>
+        </div>
+        <div class="box">
+          <h3>New Model</h3>
+          <p>P(buy | price, booking context), then Price × P(buy) on an allowed grid. Trained on Databricks Free and Google Cloud (Colab + BigQuery); scored in the lab from an exported artifact.</p>
+        </div>
+      </div>
+
+      <p><b>Business Rules</b> always finish the job (included-in-fare, loyalty, min/max, inventory, airport vs online bags, temporary RM caps). Example: recommend USD 175, cap USD 150, customer sees USD 150.</p>
+
+      <h2>Products, rollout, checkout</h2>
+      <p><b>v1 products:</b> extra baggage and preferred / extra-legroom seat. Fare-brand upgrades are future expansion, not built here.</p>
+      <p><b>Rollout:</b> Offline → shadow (log New Model, customer still gets Current Pricing) → 5% → 20% → 50% → 100%. Pause or Return to Current Pricing at any time.</p>
+      <p><b>Checkout fallback:</b> New Model → Current Pricing → simple rules → a safe fixed price. If the model fails at checkout, the customer still gets a valid price.</p>
+
+      <h2>How to read the four screens</h2>
+      <table>
+        <tr><th>1. Price Explanation</th><td>Why this booking’s extra-legroom price moved versus Current Pricing. Both prices in USD.</td></tr>
+        <tr><th>2. Pricing Controls</th><td>Traffic percent, price bands, temporary caps. Not per-passenger approval.</td></tr>
+        <tr><th>3. Pricing Test Results</th><td>Revenue per passenger, conversion, average selling price. Simulated comparison.</td></tr>
+        <tr><th>4. Production Monitor</th><td>Commercial, model, system, and rules health, then a Rollout Decision: HOLD / expand / return.</td></tr>
+      </table>
+
+      <h2>Two-minute walk</h2>
+      <table>
+        <tr><th>Price Explanation</th><td>Show why the New Model recommends a different extra-legroom price than Current Pricing on SIN-LHR Economy Basic, four days out. Both prices are in USD.</td></tr>
+        <tr><th>Pricing Controls</th><td>Revenue Management sets traffic, bands, pause, or Return to Current Pricing. Not per-passenger approval.</td></tr>
+        <tr><th>Pricing Test Results</th><td>Ask whether revenue per passenger rose without damaging conversion. Say out loud: simulated result using synthetic/public data.</td></tr>
+        <tr><th>Production Monitor</th><td>If behaviour drifts or quality drops, HOLD expansion or Return to Current Pricing. Checkout still has a fallback.</td></tr>
+      </table>
+
+      <h2>Resume bullets</h2>
+      <p>Built a production lab that tests a New Model against Current Pricing for extra baggage and extra-legroom seats, then applies Business Rules so Revenue Management keeps final control.</p>
+      <p>Trained P(buy | price, booking context) on Databricks and Google Cloud (Colab + BigQuery), selected price by expected revenue, and compared Current vs New on simulated offer logs (synthetic + public data).</p>
+      <p>Added rollout (shadow to 5% to 20%), checkout fallback, and a monitor with a HOLD / Return to Current Pricing decision so a model is not left live when behaviour drifts.</p>
+      <p class="honesty">Honesty line for every interview answer: <i>Simulated result using synthetic/public data.</i> Do not claim employment at a named airline, access to carrier data, or a live airline A/B test.</p>
+    </div>
+    <footer>
+      <a href="https://github.com/Dureduran/AirlineAncillaryPricingLab">github.com/Dureduran/AirlineAncillaryPricingLab</a>
+      <span>Independent portfolio prototype &nbsp;|&nbsp; synthetic / public data only</span>
+    </footer>
+  </div>
+</body>
+</html>
