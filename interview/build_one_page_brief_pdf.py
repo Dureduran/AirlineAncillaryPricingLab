@@ -274,7 +274,7 @@ def build():
     walk = [
         ("Price Explanation", "Show why the New Model recommends a different extra-legroom price than Current Pricing on SIN-LHR Economy Basic, four days out. Both prices are in USD."),
         ("Pricing Controls", "Revenue Management sets traffic, bands, pause, or Return to Current Pricing. Not per-passenger approval."),
-        ("Pricing Test Results", "Ask whether revenue per passenger rose without damaging conversion. Say out loud: simulated result using synthetic/public data."),
+        ("Pricing Test Results", "Ask whether revenue per passenger rose without damaging conversion. Simulated result using synthetic and public data."),
         ("Production Monitor", "If behaviour drifts or quality drops, HOLD expansion or Return to Current Pricing. Checkout still has a fallback."),
     ]
     walk_rows = [
@@ -317,8 +317,8 @@ def build():
     story.append(Spacer(1, 4))
     story.append(
         Paragraph(
-            "Honesty line for every interview answer: <i>Simulated result using synthetic/public data.</i> "
-            "Do not claim employment at a named airline, access to carrier data, or a live airline A/B test.",
+            "Independent portfolio prototype. Results are simulated using synthetic and public data. "
+            "This lab is not affiliated with any carrier and does not use airline internal data, systems, or proprietary pricing logic.",
             s["small"],
         )
     )

@@ -124,7 +124,7 @@
       <table>
         <tr><th>Price Explanation</th><td>Show why the New Model recommends a different extra-legroom price than Current Pricing on SIN-LHR Economy Basic, four days out. Both prices are in USD.</td></tr>
         <tr><th>Pricing Controls</th><td>Revenue Management sets traffic, bands, pause, or Return to Current Pricing. Not per-passenger approval.</td></tr>
-        <tr><th>Pricing Test Results</th><td>Ask whether revenue per passenger rose without damaging conversion. Say out loud: simulated result using synthetic/public data.</td></tr>
+        <tr><th>Pricing Test Results</th><td>Ask whether revenue per passenger rose without damaging conversion. Simulated result using synthetic and public data.</td></tr>
         <tr><th>Production Monitor</th><td>If behaviour drifts or quality drops, HOLD expansion or Return to Current Pricing. Checkout still has a fallback.</td></tr>
       </table>
 
@@ -132,7 +132,7 @@
       <p>Built a production lab that tests a New Model against Current Pricing for extra baggage and extra-legroom seats, then applies Business Rules so Revenue Management keeps final control.</p>
       <p>Trained P(buy | price, booking context) on Databricks and Google Cloud (Colab + BigQuery), selected price by expected revenue, and compared Current vs New on simulated offer logs (synthetic + public data).</p>
       <p>Added rollout (shadow to 5% to 20%), checkout fallback, and a monitor with a HOLD / Return to Current Pricing decision so a model is not left live when behaviour drifts.</p>
-      <p class="honesty">Honesty line for every interview answer: <i>Simulated result using synthetic/public data.</i> Do not claim employment at a named airline, access to carrier data, or a live airline A/B test.</p>
+      <p class="honesty">Independent portfolio prototype. Results are simulated using synthetic and public data. This lab is not affiliated with any carrier and does not use airline internal data, systems, or proprietary pricing logic.</p>
     </div>
     <footer>
       <a href="https://github.com/Dureduran/AirlineAncillaryPricingLab">github.com/Dureduran/AirlineAncillaryPricingLab</a>
