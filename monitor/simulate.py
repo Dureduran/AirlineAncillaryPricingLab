@@ -26,7 +26,10 @@ def simulate_batch(n: int = 500, seed: int = 7) -> pd.DataFrame:
         served = serve_booking(rec, cfg)
         # Realised purchase from served price vs a noisy WTP proxy using current/new p_buy.
         p = served["p_buy_new"] if served["arm"] == "new_model" else served["p_buy_current"]
-        purchased = int(rng.random() < p)
+        # A free or unavailable item has no paid purchase under either system.
+        # The draw is still taken so every other booking keeps its outcome.
+        draw = rng.random()
+        purchased = int(draw < p) if served["offered"] else 0
         # Inject drift: SIN-BOM within 7 days converts less than the New Model expects.
         drift = rec["route"] == "SIN-BOM" and int(rec["days_to_departure"]) <= 7
         if drift and served["arm"] == "new_model":

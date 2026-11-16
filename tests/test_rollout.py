@@ -1,8 +1,10 @@
 from pathlib import Path
 
+import pytest
+
 from lab.constants import FIXTURE_BOOKING, ROLLOUT_STEPS
 from rollout import RolloutConfig, assign_new_model, get_config, is_shadow, upsert_config
-from rollout.assignment import serve_booking
+from rollout.assignment import NOT_CHARGEABLE_ARM, serve_booking
 from rollout.ladder import (
     DISPLAY_STATES,
     LADDER_STATES,
@@ -173,6 +175,43 @@ def test_twenty_percent_serve_split(monkeypatch):
         else:
             assert out["served_price"] == out["current_price"]
     assert 0.10 < new_hits / 200 < 0.30
+
+
+@pytest.mark.parametrize("rules_price", [0.0, None])
+@pytest.mark.parametrize("step", ["shadow", "5", "20", "100", "return_to_current"])
+def test_free_or_unavailable_item_is_never_served_a_price(monkeypatch, step, rules_price):
+    not_chargeable = dict(
+        FAKE_RECOMMEND,
+        customer_price=rules_price,
+        offered=False,
+        p_buy_current=0.0,
+        p_buy_new=0.0,
+        expected_revenue_current=0.0,
+        expected_revenue_new=0.0,
+        rule_reason_codes=["included_in_fare" if rules_price == 0.0 else "no_inventory"],
+    )
+    monkeypatch.setattr(
+        "rollout.assignment.recommend",
+        lambda *args, **kwargs: dict(not_chargeable),
+    )
+    cfg = apply_step(
+        RolloutConfig(
+            route="SIN-LHR",
+            product_type="extra_legroom",
+            status="TESTING",
+            traffic_percent=20,
+            shadow=False,
+            allowed_min=80,
+            allowed_max=150,
+        ),
+        step,
+    )
+    for i in range(40):
+        out = serve_booking(dict(FIXTURE_BOOKING, booking_id=f"FREE-{i}"), cfg)
+        # Current Pricing's quote is on record, but it is not what the customer pays.
+        assert out["current_price"] == 120.0
+        assert out["served_price"] == rules_price
+        assert out["arm"] == NOT_CHARGEABLE_ARM
 
 
 def test_config_is_per_route_product_with_band_and_status(tmp_path, monkeypatch):

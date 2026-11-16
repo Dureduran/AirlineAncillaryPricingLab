@@ -48,6 +48,35 @@ def loyalty_comp_seat(loyalty: str, product_type: str, cabin: str) -> bool:
     )
 
 
+# Reason codes for a booking on which no price is charged at all.
+FREE_REASONS = frozenset({"included_in_fare", "loyalty_complimentary"})
+UNAVAILABLE_REASONS = frozenset({"no_inventory"})
+NOT_CHARGEABLE_REASONS = FREE_REASONS | UNAVAILABLE_REASONS
+
+
+def not_chargeable_reason(
+    *,
+    product_type: str,
+    fare_type: str,
+    loyalty: str,
+    cabin: str,
+    remaining_extra_legroom: int,
+) -> str | None:
+    """Why no price is charged for this item, or None when a price applies.
+
+    These rules read the booking only, never a price, so the answer is the same
+    whether Current Pricing or the New Model produced the quote. Any comparison
+    of the two has to apply it to both.
+    """
+    if product_type == "extra_legroom" and remaining_extra_legroom <= 0:
+        return "no_inventory"
+    if fare_includes_product(fare_type, product_type):
+        return "included_in_fare"
+    if loyalty_comp_seat(loyalty, product_type, cabin):
+        return "loyalty_complimentary"
+    return None
+
+
 def apply_business_rules(
     *,
     recommended_price: float,
@@ -67,27 +96,19 @@ def apply_business_rules(
     reasons: list[str] = []
     today = today or date.today()
 
-    if product_type == "extra_legroom" and remaining_extra_legroom <= 0:
+    blocked = not_chargeable_reason(
+        product_type=product_type,
+        fare_type=fare_type,
+        loyalty=loyalty,
+        cabin=cabin,
+        remaining_extra_legroom=remaining_extra_legroom,
+    )
+    if blocked is not None:
+        # Unavailable items have no price; free items are priced at zero.
         return RuleResult(
-            customer_price=None,
+            customer_price=None if blocked in UNAVAILABLE_REASONS else 0.0,
             offered=False,
-            reason_codes=["no_inventory"],
-            recommended_price=recommended_price,
-        )
-
-    if fare_includes_product(fare_type, product_type):
-        return RuleResult(
-            customer_price=0.0,
-            offered=False,
-            reason_codes=["included_in_fare"],
-            recommended_price=recommended_price,
-        )
-
-    if loyalty_comp_seat(loyalty, product_type, cabin):
-        return RuleResult(
-            customer_price=0.0,
-            offered=False,
-            reason_codes=["loyalty_complimentary"],
+            reason_codes=[blocked],
             recommended_price=recommended_price,
         )
 

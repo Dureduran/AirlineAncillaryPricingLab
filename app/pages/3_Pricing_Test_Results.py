@@ -31,7 +31,8 @@ for line in view["summary_lines"]:
 
 st.write(view["sentence"])
 st.caption(
-    f"{SIMULATED_BANNER} n={view['stats']['n']:,} simulated bookings compared with {CURRENT_PRICING}. "
+    f"{SIMULATED_BANNER} n={view['stats']['n_chargeable']:,} chargeable bookings out of "
+    f"{view['stats']['n']:,} simulated, compared with {CURRENT_PRICING}. "
     f"Live New Model arm n={view['stats']['n_new_model_live']:,}. Not a live airline A/B test."
 )
 st.caption(TEST_RESULTS_BASIS)

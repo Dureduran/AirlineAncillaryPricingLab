@@ -114,6 +114,8 @@ def test_page_leads_with_rollout_decision_not_accuracy():
     assert "st.button(\"Expand to 100" not in text
     assert "increase_testing" not in text
     assert "does not auto-expand traffic to 100%" in text
+    assert 'report["live_sample"]' in text
+    assert "Bookings served the New Model price" in text
     assert "etihad.com" not in text.lower()
     for word in FORBIDDEN_UI_WORDS:
         assert word not in text
