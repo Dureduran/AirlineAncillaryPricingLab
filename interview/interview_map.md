@@ -7,7 +7,7 @@ Independent portfolio prototype using synthetic and public data.
 | Inherit existing pricing and improve it in-house | Opening line + Price Explanation (Current Pricing vs New Model) |
 | Business Rules have final control | Price Explanation cap line; Pricing Controls temporary cap |
 | Safe rollout | Pricing Controls: shadow → 5% → 20% → 50% → 100% |
-| Commercial impact | Pricing Test Results (RevPP, conversion, ASP) |
+| Commercial impact | Pricing Test Results (RevPP, conversion, average quoted price) |
 | Monitor / HOLD | Production Monitor HOLD decision with a specific market/DTD reason |
 | Checkout fallback | New Model → Current Pricing → simple rules → safe fixed price |
 | Adoption / change | RM traffic and pause controls, not per-passenger approve |

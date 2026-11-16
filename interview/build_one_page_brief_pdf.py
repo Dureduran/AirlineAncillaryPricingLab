@@ -249,7 +249,7 @@ def build():
     screens = [
         ("1. Price Explanation", "Why this booking's extra-legroom price moved versus Current Pricing. Both prices in USD."),
         ("2. Pricing Controls", "Traffic percent, price bands, temporary caps. Not per-passenger approval."),
-        ("3. Pricing Test Results", "Revenue per passenger, conversion, average selling price. Simulated comparison."),
+        ("3. Pricing Test Results", "Revenue per passenger, conversion, average quoted price. Simulated comparison."),
         ("4. Production Monitor", "Commercial, model, system, and rules health, then a Rollout Decision: HOLD / expand / return."),
     ]
     rows = [
