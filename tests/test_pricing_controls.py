@@ -76,7 +76,7 @@ def test_increase_pause_and_return_persist_and_drive_assignment(tmp_path, monkey
 
 def test_temporary_cap_limits_customer_price(tmp_path, monkeypatch):
     _patch_state(monkeypatch, tmp_path)
-    add_temporary_cap(DEFAULT_ROUTE, DEFAULT_PRODUCT, 130, date(2026, 8, 31))
+    add_temporary_cap(DEFAULT_ROUTE, DEFAULT_PRODUCT, 130, date(2099, 8, 31))
     monkeypatch.setattr(
         "new_model.recommend.new_model_recommended_price",
         lambda booking, allowed_min=None, allowed_max=None: (175.0, 0.4),

@@ -740,7 +740,7 @@
       </section>
 
       <!-- 12 TEST RESULTS -->
-      <section class="slide" data-title="Pricing Test Results" data-notes="This is the honesty slide. Out loud: Simulated result using synthetic/public data. n=500, live New Model arm n=7. The monitor Returns. Say why a locally good fixture can still fail the batch: rules-zeroed offers, band caps, ASP collapse, and scoring a new price grid the log never showed.">
+      <section class="slide" data-title="Pricing Test Results" data-notes="This is the honesty slide. Out loud: Simulated result using synthetic/public data. n=500, live New Model arm n=7. The monitor Returns. Say why a locally good fixture can still fail the batch: rules-zeroed offers, band caps, a lower average quoted price, and scoring a new price grid the log never showed.">
         <div class="bar"><h1>Pricing Test Results</h1><span class="pg">12 / 16</span></div>
         <div class="insight">On 500 simulated bookings the New Model loses 44% of revenue. The monitor therefore Returns to Current Pricing. A model is not left live when the test is unhealthy — that is the point of the screen.</div>
         <div class="body">
@@ -751,12 +751,12 @@
                 <tbody>
                   <tr><td>Revenue per passenger</td><td>USD 82.05</td><td>USD 45.69</td><td style="color:var(--fail);font-weight:800">−44.3%</td></tr>
                   <tr><td>Purchase rate</td><td>57.5%</td><td>37.8%</td><td style="color:var(--fail);font-weight:800">−19.8 pp</td></tr>
-                  <tr><td>Average selling price</td><td>USD 141.62</td><td>USD 54.09</td><td style="color:var(--fail);font-weight:800">−62%</td></tr>
+                  <tr><td>Average quoted price</td><td>USD 141.62</td><td>USD 54.09</td><td style="color:var(--fail);font-weight:800">−62%</td></tr>
                   <tr><td>Business-rule violations</td><td>—</td><td>0</td><td style="color:var(--pass);font-weight:800">PASS</td></tr>
                 </tbody>
               </table>
               <svg viewBox="0 0 640 168" width="100%" height="168" aria-hidden="true" style="margin-top:8px">
-                <text x="0" y="18" fill="#8C8C8C" font-size="12" font-family="Arial">Expected RevPP (USD) — Current vs New</text>
+                <text x="0" y="18" fill="#8C8C8C" font-size="12" font-family="Arial">Expected RevPP (USD) = average of price × P(buy) per booking — Current vs New</text>
                 <rect x="0" y="36" width="560" height="18" fill="#EEF1F4"/>
                 <rect x="0" y="36" width="512" height="18" fill="#1B5AB5"/>
                 <text x="520" y="50" fill="#1B2838" font-size="13" font-family="Arial" font-weight="700">82.05</text>
@@ -778,7 +778,7 @@
                 <ul>
                   <li>Comparison is New Model <b>after</b> Business Rules vs Current Pricing quotes. Included / comps record USD 0 on the New Model side.</li>
                   <li>Live band caps extra-legroom at USD 150; Current Pricing can quote 190+.</li>
-                  <li>ASP collapses (USD 54 vs 142). The log never showed the New Model’s own grid — this is an extrapolation.</li>
+                  <li>Average quoted price falls (USD 54 vs 142), mostly because included items count as USD 0. The log never showed the New Model’s own grid — this is an extrapolation.</li>
                 </ul>
               </div>
             </div>
@@ -862,7 +862,7 @@
             <div class="zone">
               <h3>3. Pricing Test Results</h3>
               <p class="small"><b>Story:</b> commercial impact. Out loud: simulated result using synthetic/public data.</p>
-              <p class="small" style="margin-top:10px">RevPP, conversion, ASP. n=500, live arm n=7. Not a live airline A/B test.</p>
+              <p class="small" style="margin-top:10px">RevPP, conversion, average quoted price. n=500, live arm n=7. Not a live airline A/B test.</p>
             </div>
             <div class="zone gold-edge">
               <h3>4. Production Monitor</h3>

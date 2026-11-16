@@ -8,7 +8,7 @@ if str(ROOT) not in sys.path:
 import pandas as pd
 import streamlit as st
 
-from app.pricing_test_results import results_view
+from app.pricing_test_results import TEST_RESULTS_BASIS, results_view
 from app.ui import page_header
 from lab.copy import CURRENT_PRICING, PRICING_TEST_RESULTS, SIMULATED_BANNER
 from lab.paths import STATE_DIR
@@ -34,3 +34,4 @@ st.caption(
     f"{SIMULATED_BANNER} n={view['stats']['n']:,} simulated bookings compared with {CURRENT_PRICING}. "
     f"Live New Model arm n={view['stats']['n_new_model_live']:,}. Not a live airline A/B test."
 )
+st.caption(TEST_RESULTS_BASIS)

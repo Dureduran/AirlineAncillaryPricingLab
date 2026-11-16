@@ -32,7 +32,7 @@ New Model → Current Pricing → simple rules → safe fixed price.
 
 1. Price Explanation — why this booking’s extra-legroom price moved.  
 2. Pricing Controls — traffic, bands, temporary caps. Not per-passenger approve.  
-3. Pricing Test Results — revenue per passenger, conversion, ASP. Simulated.  
+3. Pricing Test Results — revenue per passenger, conversion, average quoted price. Simulated.  
 4. Production Monitor — commercial, model, system, rules, then a giant Rollout Decision (HOLD / expand / return).
 
 GitHub: https://github.com/Dureduran/AirlineAncillaryPricingLab

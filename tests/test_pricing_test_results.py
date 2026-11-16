@@ -52,6 +52,12 @@ def test_page_uses_pipeline_not_hardcoded_eight_percent():
         assert word not in text
 
 
+def test_price_row_is_quoted_price_and_page_explains_the_basis():
+    assert "Average quoted price (USD)" in METRIC_ROWS
+    assert all("selling price" not in row.lower() for row in METRIC_ROWS)
+    assert "TEST_RESULTS_BASIS" in PAGE.read_text(encoding="utf-8")
+
+
 def test_did_not_rebuild_production_monitor():
     text = MONITOR.read_text(encoding="utf-8")
     assert "Production Monitor" in text

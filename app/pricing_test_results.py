@@ -11,7 +11,17 @@ from monitor.test_results import comparison_sentence, summarise
 METRIC_ROWS = (
     "Revenue per passenger (USD)",
     "Purchase rate (%)",
-    "Average selling price (USD)",
+    "Average quoted price (USD)",
+)
+
+# Shown under the table so the three rows are not read as multiplying out.
+TEST_RESULTS_BASIS = (
+    "How to read the table: the figures are expected values across the simulated bookings, "
+    "using the estimated purchase chance at each price. Revenue per passenger is the average "
+    "of price × purchase chance, so it is not the purchase rate multiplied by the average "
+    "quoted price. The New Model is measured after Business Rules, where items included in "
+    "the fare or complimentary count as USD 0. Current Pricing is measured on its quoted "
+    "price for every booking."
 )
 
 
