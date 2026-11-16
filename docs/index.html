@@ -194,35 +194,45 @@
 
     <section id="results">
       <h2>3. Pricing Test Results</h2>
-      <p>We measure whether the New Model actually increases revenue versus Current Pricing without damaging conversion. n=500 simulated bookings. Live New Model arm n=7. Not a live airline A/B test.</p>
+      <p>We measure whether the New Model actually increases revenue versus Current Pricing without damaging conversion. n=222 chargeable bookings out of 500 simulated. Live New Model arm n=7. Not a live airline A/B test.</p>
       <table>
         <thead>
           <tr><th></th><th>Current Pricing</th><th>New Model</th></tr>
         </thead>
         <tbody>
-          <tr><td>Revenue per passenger (USD)</td><td>USD 82.05</td><td>USD 45.69</td></tr>
-          <tr><td>Purchase rate (%)</td><td>57.5%</td><td>37.8%</td></tr>
-          <tr><td>Average quoted price (USD)</td><td>USD 141.62</td><td>USD 54.09</td></tr>
+          <tr><td>Revenue per chargeable booking (USD)</td><td>USD 94.20</td><td>USD 102.91</td></tr>
+          <tr><td>Purchase rate (%)</td><td>62.5%</td><td>85.1%</td></tr>
+          <tr><td>Average price paid (USD)</td><td>USD 150.79</td><td>USD 120.96</td></tr>
         </tbody>
       </table>
-      <p class="muted"><b>How to read the table:</b> the figures are expected values across the simulated bookings, using the estimated purchase chance at each price. Revenue per passenger is the average of price × purchase chance, so it is not the purchase rate multiplied by the average quoted price. The New Model is measured after Business Rules, where items included in the fare or complimentary count as USD 0. Current Pricing is measured on its quoted price for every booking. Only 7 of the 500 bookings were served the New Model price, too few to read on their own.</p>
-      <p><b>Revenue impact:</b> −44.3% &nbsp; <b>Conversion impact:</b> −19.8 percentage points &nbsp; <b>Business-rule violations:</b> 0</p>
-      <p>The model decreases revenue by 44.3% in the simulation while conversion moves −19.8 percentage points versus Current Pricing.</p>
+      <p class="muted"><b>How to read the table:</b> both columns cover the same bookings, the ones where a price is actually charged. A booking whose item is included in the fare, complimentary for the loyalty tier or out of inventory is free or unavailable whichever system prices it, so it is left out of both columns and counted below. The figures are expected values, using the New Model's estimated purchase chance at each price: Current Pricing at its own quote, the New Model at its price after Business Rules. Revenue per chargeable booking is the purchase rate multiplied by the average price paid.</p>
+      <p><b>Revenue impact:</b> +9.2% &nbsp; <b>Conversion impact:</b> +22.6 percentage points &nbsp; <b>Business-rule violations:</b> 0</p>
+      <p><b>Left out of both columns, free or unavailable:</b> 278 (231 included in the fare, 36 loyalty complimentary, 11 no inventory)</p>
+      <p>On the 222 chargeable bookings, the New Model increases expected revenue by 9.2% in the simulation while conversion moves +22.6 percentage points versus Current Pricing.</p>
+      <p><b>What this does not show:</b> the +9.2% is the New Model's own estimate, not an observed result. All of the gain comes from extra baggage (+55.2%, n=75), which is in shadow on every route, so no customer has been shown a New Model baggage price. Extra-legroom is −1.3% (n=147). Only 7 bookings were served the New Model price, all on SIN–LHR extra-legroom, too few to read on their own.</p>
+      <p><b>Corrected 16 November 2026.</b> Until then this page reported −44.3% revenue, −19.8 percentage points of conversion and a decision to Return to Current Pricing. That comparison was not like-for-like: it applied Business Rules to the New Model only, so on the 278 free or unavailable bookings the New Model counted as USD 0 while Current Pricing was still credited with its quote.</p>
     </section>
 
     <section id="monitor">
       <h2>4. Production Monitor</h2>
       <div class="decision">
         <div class="decision-label">ROLLOUT DECISION</div>
-        <h2 style="margin:0.35rem 0 0.5rem">Return to Current Pricing</h2>
-        <p style="margin:0">Commercial performance is outside the agreed tolerance. A model is not left live when the test is unhealthy — that is the point of this screen.</p>
+        <h2 style="margin:0.35rem 0 0.5rem">HOLD</h2>
+        <p style="margin:0">The simulated comparison favours the New Model, but only 7 bookings have been served its price. At least 100 are needed before expanding. Keep the current traffic split and continue monitoring. A model is not expanded on seven bookings — that is the point of this screen.</p>
       </div>
       <div class="metrics">
-        <div class="kpi"><span class="label">Commercial — revenue</span><strong class="fail">FAIL</strong></div>
-        <div class="kpi"><span class="label">Commercial — conversion</span><strong class="fail">FAIL</strong></div>
+        <div class="kpi"><span class="label">Commercial — revenue</span><strong class="pass">PASS</strong></div>
+        <div class="kpi"><span class="label">Commercial — conversion</span><strong class="pass">PASS</strong></div>
+        <div class="kpi"><span class="label">Bookings served the New Model price</span><strong class="warn">7 of 100 needed</strong></div>
+        <div class="kpi"><span class="label">Predictions accurate</span><strong class="warn">Not judged yet</strong></div>
+      </div>
+      <div class="metrics">
         <div class="kpi"><span class="label">Customer behaviour changed</span><strong class="pass">No</strong></div>
+        <div class="kpi"><span class="label">Pricing failures</span><strong class="pass">0.0%</strong></div>
+        <div class="kpi"><span class="label">Fallback usage</span><strong class="pass">0.0%</strong></div>
         <div class="kpi"><span class="label">Business-rule violations</span><strong class="pass">0</strong></div>
       </div>
+      <p class="muted">Revenue and conversion compare both systems on the 222 chargeable bookings out of 500. Expand needs at least 100 bookings served the New Model price; Return to Current Pricing does not wait for them.</p>
     </section>
 
     <footer>

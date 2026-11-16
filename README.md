@@ -50,6 +50,16 @@ Same offer log → ingest training columns into BigQuery `ancillary_lab` → tra
 
 See [gcp/README_GCP.md](gcp/README_GCP.md) and the Colab notebook [gcp/run_ingest_and_train.ipynb](gcp/run_ingest_and_train.ipynb).
 
+## How the test compares the two systems
+
+Pricing Test Results compares Current Pricing and the New Model on the same bookings: the ones where a price is actually charged. A booking whose item is included in the fare, complimentary for the loyalty tier or out of inventory is free or unavailable whichever system prices it, so it is left out of both sides and reported as a count. Revenue per chargeable booking is the purchase rate multiplied by the average price paid. The figures are expected values from the New Model's own purchase estimates, not observed sales.
+
+The Production Monitor does not expand on a small live arm. Expand needs at least 100 bookings served the New Model price; below that a favourable comparison gives a Rollout Decision of HOLD. Return to Current Pricing does not wait for a live sample.
+
+Current simulated run: 500 bookings, 222 chargeable. Left out of both sides, free or unavailable: 278 (231 included in the fare, 36 loyalty complimentary, 11 no inventory). Revenue per chargeable booking is USD 94.20 for Current Pricing and USD 102.91 for the New Model (+9.2%). All of the gain comes from extra baggage, which is still in shadow on every route. 7 bookings were served the New Model price, so the Rollout Decision is HOLD.
+
+Corrected 16 November 2026. Until then the lab reported −44.3% revenue and a decision to Return to Current Pricing. That comparison was not like-for-like: it applied Business Rules to the New Model only, so on the 278 free or unavailable bookings the New Model counted as USD 0 while Current Pricing was still credited with its quote.
+
 ## Language
 
 User-facing copy uses Current Pricing, New Model, Business Rules, Rollout Decision, Return to Current Pricing, and Pricing Test Results.

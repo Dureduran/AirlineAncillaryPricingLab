@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Ancillary Pricing Production Lab — Executive walkthrough</title>
-  <meta name="description" content="McKinsey-style walkthrough: the business question, the numbers, the pipeline, why monotonic XGBoost, and why the monitor Returns to Current Pricing." />
+  <meta name="description" content="McKinsey-style walkthrough: the business question, the numbers, the pipeline, why monotonic XGBoost, and why the monitor says HOLD." />
   <style>
     :root {
       --navy: #1B2838;
@@ -378,9 +378,9 @@
       </section>
 
       <!-- 2 ANSWER -->
-      <section class="slide" data-title="The answer" data-notes="Pyramid: answer first. The product is the decision system. On today's simulated test the commercial answer is Return to Current Pricing. That is a feature, not a failure of the lab.">
+      <section class="slide" data-title="The answer" data-notes="Pyramid: answer first. The product is the decision system. On today's simulated test the answer is HOLD: the comparison favours the New Model by 9.2% on the 222 chargeable bookings, but that is the model's own estimate, all of the gain is extra baggage still in shadow, and only 7 bookings have been served its price. A monitor that will not expand on seven bookings is a feature of the lab.">
         <div class="bar"><h1>The answer</h1><span class="pg">02 / 16</span></div>
-        <div class="insight">Do not leave the New Model live. Return to Current Pricing until the test is healthy — and treat the decision system as the product, not the algorithm.</div>
+        <div class="insight">Hold the New Model at 20%. The simulated test favours it by 9.2%, but only 7 bookings have been served its price — and treat the decision system as the product, not the algorithm.</div>
         <div class="body">
           <div class="g3">
             <div class="zone navy gold-edge">
@@ -393,17 +393,17 @@
             </div>
             <div class="zone gold-edge">
               <h3>Resolution</h3>
-              <p>A production lab: monotonic XGBoost estimates P(buy), a price grid maximises expected revenue, Business Rules finish, a four-layer fallback protects checkout, and the monitor currently says <b>Return to Current Pricing</b>.</p>
+              <p>A production lab: monotonic XGBoost estimates P(buy), a price grid maximises expected revenue, Business Rules finish, a four-layer fallback protects checkout, and the monitor currently says <b>HOLD</b>: too few bookings have been served the New Model price to expand it.</p>
             </div>
           </div>
           <div class="g4">
-            <div class="kpi fail"><div class="lbl">Simulated RevPP</div><div class="val">−44.3%</div><div class="hint">New Model vs Current Pricing</div></div>
-            <div class="kpi fail"><div class="lbl">Conversion</div><div class="val">−19.8 pp</div><div class="hint">Outside the −3 pp floor</div></div>
+            <div class="kpi"><div class="lbl">Simulated revenue</div><div class="val">+9.2%</div><div class="hint">Model’s own estimate, 222 chargeable bookings</div></div>
+            <div class="kpi"><div class="lbl">Conversion</div><div class="val">+22.6 pp</div><div class="hint">Inside the −3 pp floor</div></div>
             <div class="kpi pass"><div class="lbl">Rule violations</div><div class="val">0</div><div class="hint">Included / comps still respected</div></div>
-            <div class="kpi gold"><div class="lbl">Rollout Decision</div><div class="val" style="font-size:22px;padding-top:8px">Return</div><div class="hint">Not left live when unhealthy</div></div>
+            <div class="kpi gold"><div class="lbl">Rollout Decision</div><div class="val" style="font-size:22px;padding-top:8px">HOLD</div><div class="hint">7 live bookings, 100 needed to expand</div></div>
           </div>
         </div>
-        <div class="foot"><span>Source: docs/index.html fixture + Pricing Test Results (n=500) | Simulated result using synthetic/public data</span><span>Independent portfolio prototype. No airline internal data.</span></div>
+        <div class="foot"><span>Source: docs/index.html fixture + Pricing Test Results (222 chargeable of n=500) | Simulated result using synthetic/public data</span><span>Independent portfolio prototype. No airline internal data.</span></div>
       </section>
 
       <!-- 3 AGENDA -->
@@ -421,7 +421,7 @@
                   <tr><td>03</td><td>Data, features, assumptions</td><td>What the New Model is allowed to see</td></tr>
                   <tr><td>04</td><td>Model choice</td><td>Why monotonic XGBoost, not a Deepair-style net</td></tr>
                   <tr><td>05</td><td>Pipeline</td><td>Offline train → online score → rules → monitor</td></tr>
-                  <tr><td>06</td><td>The numbers</td><td>AUC, one-booking lift, batch loss, decision</td></tr>
+                  <tr><td>06</td><td>The numbers</td><td>AUC, one-booking lift, batch result, decision</td></tr>
                   <tr><td>07</td><td>Controls</td><td>Rules, fallback, traffic ladder</td></tr>
                   <tr><td>08</td><td>Week one / 90 days</td><td>What I would request on the job</td></tr>
                 </tbody>
@@ -447,9 +447,9 @@
       </section>
 
       <!-- 4 QUESTION -->
-      <section class="slide" data-title="The business question" data-notes="Issue tree. The question is not 'is AUC good?'. It is 'should this New Model stay live on this route/product?'. MECE branches: commercial, model, system, rules.">
+      <section class="slide" data-title="The business question" data-notes="Issue tree. The question is not 'is AUC good?'. It is 'should this New Model stay live on this route/product?'. MECE branches: commercial, live evidence, model, system, rules. Commercial passes on the model's own estimate, but only 7 bookings have been served the New Model price, so today's answer is HOLD.">
         <div class="bar"><h1>The business question</h1><span class="pg">04 / 16</span></div>
-        <div class="insight">The only production question: should we expand the New Model past 20% on SIN–LHR extra-legroom — or Return to Current Pricing?</div>
+        <div class="insight">The only production question: should we expand the New Model past 20% on SIN–LHR extra-legroom, HOLD it there, or Return to Current Pricing?</div>
         <div class="body">
           <div class="tree">
             <div class="tree-q">
@@ -457,16 +457,21 @@
               <strong>Expand, HOLD, or Return?</strong>
               <p class="small" style="color:#C5D0DC">Not “what price should this passenger see?” Revenue Management already has Current Pricing. We are deciding whether the New Model deserves traffic.</p>
             </div>
-            <div class="branches">
+            <div class="branches" style="grid-template-rows:repeat(5, 1fr)">
               <div class="branch">
-                <div><b>Commercial</b><div class="tiny">RevPP and conversion</div></div>
-                <div class="small">Does expected revenue per passenger rise without damaging conversion more than −3 percentage points?</div>
-                <span class="tag fail">FAIL</span>
+                <div><b>Commercial</b><div class="tiny">Revenue and conversion</div></div>
+                <div class="small">Does expected revenue per chargeable booking rise without damaging conversion more than −3 percentage points? On the model’s own estimate, yes: +9.2% and +22.6 pp.</div>
+                <span class="tag pass">PASS</span>
+              </div>
+              <div class="branch">
+                <div><b>Live evidence</b><div class="tiny">Bookings served the New Model price</div></div>
+                <div class="small">Have at least 100 bookings been served the New Model price? Only 7 have, all on SIN–LHR extra-legroom. A favourable estimate is not expanded on that.</div>
+                <span class="tag hold">HOLD</span>
               </div>
               <div class="branch">
                 <div><b>Model health</b><div class="tiny">Calibration and drift</div></div>
-                <div class="small">Are predictions still calibrated? Has SIN–BOM within 7 days of departure started behaving unlike training?</div>
-                <span class="tag pass">WATCH</span>
+                <div class="small">Are predictions still calibrated? Not judged until 100 bookings are live. Has SIN–BOM within 7 days of departure started behaving unlike training? Not so far.</div>
+                <span class="tag hold">WATCH</span>
               </div>
               <div class="branch">
                 <div><b>System</b><div class="tiny">Checkout must never fail open</div></div>
@@ -481,7 +486,7 @@
             </div>
           </div>
         </div>
-        <div class="foot"><span>Source: monitor/health.py thresholds — revenue floor −2%, conversion floor −3 pp, expand if RevPP &gt; +4%</span><span>Simulated result using synthetic/public data</span></div>
+        <div class="foot"><span>Source: monitor/health.py thresholds — revenue floor −2%, conversion floor −3 pp, expand if revenue &gt; +4% and at least 100 bookings were served the New Model price</span><span>Simulated result using synthetic/public data</span></div>
       </section>
 
       <!-- 5 APPROACH -->
@@ -662,7 +667,7 @@
             </div>
           </div>
         </div>
-        <div class="foot"><span>Source: new_model/recommend.py, lab/constants.py PRICE_GRIDS, business_rules/__init__.py</span><span>Current Pricing remains the comparison quote on every booking</span></div>
+        <div class="foot"><span>Source: new_model/recommend.py, lab/constants.py PRICE_GRIDS, business_rules/__init__.py</span><span>Current Pricing remains the comparison quote on every chargeable booking</span></div>
       </section>
 
       <!-- 10 PIPELINE -->
@@ -705,9 +710,9 @@
       </section>
 
       <!-- 11 NUMBERS -->
-      <section class="slide" data-title="Evidence — model and fixture" data-notes="Holdout AUC ~0.87 is useful discrimination, not a go-live. Then the fixture: on this one SIN-LHR Economy Basic booking the New Model looks better (USD 121 vs 111 expected revenue) by pricing 140 not 190. That is why you still need the batch.">
+      <section class="slide" data-title="Evidence — model and fixture" data-notes="Holdout AUC ~0.87 is useful discrimination, not a go-live. Then the fixture: on this one SIN-LHR Economy Basic booking the New Model looks better (USD 121 vs 111 expected revenue) by pricing 140 not 190. One booking is not a decision. That is why you still need the batch, and after the batch, live bookings.">
         <div class="bar"><h1>Evidence — model and one booking</h1><span class="pg">11 / 16</span></div>
-        <div class="insight">Holdout AUC is 0.87 — useful ranking, not a licence to go live. On one SIN–LHR booking the New Model even looks better. That is exactly why a batch test exists.</div>
+        <div class="insight">Holdout AUC is 0.87 — useful ranking, not a licence to go live. On one SIN–LHR booking the New Model looks better. One booking is not a decision; that is why a batch test exists.</div>
         <div class="body">
           <div class="g2">
             <div class="stack">
@@ -740,45 +745,51 @@
       </section>
 
       <!-- 12 TEST RESULTS -->
-      <section class="slide" data-title="Pricing Test Results" data-notes="This is the honesty slide. Out loud: Simulated result using synthetic/public data. n=500, live New Model arm n=7. The monitor Returns. Say why a locally good fixture can still fail the batch: rules-zeroed offers, band caps, a lower average quoted price, and scoring a new price grid the log never showed.">
+      <section class="slide" data-title="Pricing Test Results" data-notes="This is the honesty slide. Out loud: Simulated result using synthetic/public data. Both columns cover the same 222 chargeable bookings; the other 278 of the 500 are free or unavailable under Business Rules and sit outside the test. The New Model is +9.2% on its own estimate, and all of that gain is extra baggage, which is still in shadow. Live New Model arm n=7, so the monitor says HOLD, not Expand. If asked: until 16 November 2026 this slide said −44.3% and Return to Current Pricing, because Business Rules were applied to the New Model only.">
         <div class="bar"><h1>Pricing Test Results</h1><span class="pg">12 / 16</span></div>
-        <div class="insight">On 500 simulated bookings the New Model loses 44% of revenue. The monitor therefore Returns to Current Pricing. A model is not left live when the test is unhealthy — that is the point of the screen.</div>
+        <div class="insight">On the 222 chargeable bookings the New Model raises expected revenue by 9.2% — on its own estimate. Only 7 bookings were served its price, so the monitor says HOLD, not Expand.</div>
         <div class="body">
           <div class="g13">
             <div class="zone white" style="padding:0;border:0">
               <table>
                 <thead><tr><th></th><th>Current Pricing</th><th>New Model</th><th>Delta</th></tr></thead>
                 <tbody>
-                  <tr><td>Revenue per passenger</td><td>USD 82.05</td><td>USD 45.69</td><td style="color:var(--fail);font-weight:800">−44.3%</td></tr>
-                  <tr><td>Purchase rate</td><td>57.5%</td><td>37.8%</td><td style="color:var(--fail);font-weight:800">−19.8 pp</td></tr>
-                  <tr><td>Average quoted price</td><td>USD 141.62</td><td>USD 54.09</td><td style="color:var(--fail);font-weight:800">−62%</td></tr>
+                  <tr><td>Revenue per chargeable booking</td><td>USD 94.20</td><td>USD 102.91</td><td style="color:var(--pass);font-weight:800">+9.2%</td></tr>
+                  <tr><td>Purchase rate</td><td>62.5%</td><td>85.1%</td><td style="color:var(--pass);font-weight:800">+22.6 pp</td></tr>
+                  <tr><td>Average price paid</td><td>USD 150.79</td><td>USD 120.96</td><td style="font-weight:800">−USD 29.82</td></tr>
                   <tr><td>Business-rule violations</td><td>—</td><td>0</td><td style="color:var(--pass);font-weight:800">PASS</td></tr>
                 </tbody>
               </table>
-              <svg viewBox="0 0 640 168" width="100%" height="168" aria-hidden="true" style="margin-top:8px">
-                <text x="0" y="18" fill="#8C8C8C" font-size="12" font-family="Arial">Expected RevPP (USD) = average of price × P(buy) per booking — Current vs New</text>
+              <svg viewBox="0 0 640 190" width="100%" height="190" aria-hidden="true" style="margin-top:8px">
+                <text x="0" y="18" fill="#8C8C8C" font-size="12" font-family="Arial">Expected revenue per chargeable booking (USD) = purchase rate × average price paid — Current vs New</text>
                 <rect x="0" y="36" width="560" height="18" fill="#EEF1F4"/>
-                <rect x="0" y="36" width="512" height="18" fill="#1B5AB5"/>
-                <text x="520" y="50" fill="#1B2838" font-size="13" font-family="Arial" font-weight="700">82.05</text>
+                <rect x="0" y="36" width="469" height="18" fill="#1B5AB5"/>
+                <text x="477" y="50" fill="#1B2838" font-size="13" font-family="Arial" font-weight="700">94.20</text>
                 <rect x="0" y="78" width="560" height="18" fill="#EEF1F4"/>
-                <rect x="0" y="78" width="285" height="18" fill="#4A90A4"/>
-                <text x="293" y="92" fill="#1B2838" font-size="13" font-family="Arial" font-weight="700">45.69</text>
-                <text x="0" y="128" fill="#8C8C8C" font-size="12" font-family="Arial">n = 500 simulated bookings · live New Model arm n = 7 · not a live airline A/B test</text>
-                <text x="0" y="150" fill="#8C8C8C" font-size="12" font-family="Arial">Kill rule: Return if RevPP impact ≤ −2% or conversion impact ≤ −3 pp. Expand only if RevPP &gt; +4% and conversion holds.</text>
+                <rect x="0" y="78" width="512" height="18" fill="#4A90A4"/>
+                <text x="520" y="92" fill="#1B2838" font-size="13" font-family="Arial" font-weight="700">102.91</text>
+                <text x="0" y="128" fill="#8C8C8C" font-size="12" font-family="Arial">n = 222 chargeable of 500 simulated bookings · live New Model arm n = 7 · not a live airline A/B test</text>
+                <text x="0" y="150" fill="#8C8C8C" font-size="12" font-family="Arial">Kill rule: Return if revenue impact ≤ −2% or conversion impact ≤ −3 pp.</text>
+                <text x="0" y="172" fill="#8C8C8C" font-size="12" font-family="Arial">Expand only if revenue &gt; +4%, conversion holds and at least 100 bookings were served the New Model price.</text>
               </svg>
+              <div class="zone" style="margin-top:14px">
+                <h3>Corrected 16 November 2026</h3>
+                <p class="small">Until then this slide reported −44.3% revenue, −19.8 pp conversion and a decision to Return to Current Pricing. That comparison was not like-for-like: Business Rules were applied to the New Model only, so on the 278 free or unavailable bookings the New Model counted as USD 0 while Current Pricing was still credited with its quote.</p>
+              </div>
             </div>
             <div class="stack">
-              <div class="zone fail-edge">
+              <div class="zone gold-edge">
                 <h3>Rollout Decision</h3>
-                <p><span class="tag fail">RETURN</span></p>
-                <p style="margin-top:10px">Commercial performance is outside the agreed tolerance. Rules passed. Checkout still has a fallback. We still Return.</p>
+                <p><span class="tag hold">HOLD</span></p>
+                <p style="margin-top:10px">The simulated comparison favours the New Model, but only 7 bookings have been served its price. At least 100 are needed before expanding. Rules passed. Checkout still has a fallback. We still HOLD.</p>
               </div>
               <div class="zone">
-                <h3>Why a good fixture can fail a batch</h3>
+                <h3>Why +9.2% is not yet a go</h3>
                 <ul>
-                  <li>Comparison is New Model <b>after</b> Business Rules vs Current Pricing quotes. Included / comps record USD 0 on the New Model side.</li>
-                  <li>Live band caps extra-legroom at USD 150; Current Pricing can quote 190+.</li>
-                  <li>Average quoted price falls (USD 54 vs 142), mostly because included items count as USD 0. The log never showed the New Model’s own grid — this is an extrapolation.</li>
+                  <li>Both columns cover the same 222 chargeable bookings. The other 278 are free or unavailable under Business Rules whichever system prices them: 231 included in the fare, 36 loyalty complimentary, 11 no inventory.</li>
+                  <li>The +9.2% is the New Model’s own estimate, not an observed result. All of the gain is extra baggage (+55.2%, n=75), which is in shadow on every route: no customer has been shown a New Model baggage price.</li>
+                  <li>Extra-legroom is −1.3% (n=147). The live band caps it at USD 150; Current Pricing can quote 190+.</li>
+                  <li>The only live cell is SIN–LHR extra-legroom: 30 chargeable bookings, 7 served the New Model price, 6 of them bought. The log never showed the New Model’s own grid — this is an extrapolation.</li>
                 </ul>
               </div>
             </div>
@@ -788,7 +799,7 @@
       </section>
 
       <!-- 13 CONTROLS -->
-      <section class="slide" data-title="Controls" data-notes="Three layers of control: Business Rules, checkout fallback, traffic ladder. SIN-LHR extra-legroom is the only cell at 20%. Everything else is shadow. HOLD reason in code is SIN-BOM short-DTD drift — currently commercial fail fires first.">
+      <section class="slide" data-title="Controls" data-notes="Three layers of control: Business Rules, checkout fallback, traffic ladder. SIN-LHR extra-legroom is the only cell at 20%. Everything else is shadow. Two HOLD reasons in code: SIN-BOM short-DTD drift, and fewer than 100 bookings served the New Model price. The second is the one that fires today.">
         <div class="bar"><h1>Controls that keep it safe</h1><span class="pg">13 / 16</span></div>
         <div class="insight">Business Rules, a four-layer fallback, and a traffic ladder are the product. The New Model is a component that can be set to zero without stranding a guest.</div>
         <div class="body">
@@ -830,9 +841,10 @@
               <div class="zone gold-edge">
                 <h3>Monitor gates</h3>
                 <ul>
-                  <li>Return if RevPP ≤ −2% or conversion ≤ −3 pp</li>
+                  <li>Return if revenue ≤ −2% or conversion ≤ −3 pp</li>
                   <li>HOLD if SIN–BOM, DTD ≤ 7, prediction−realised &gt; 8 pp</li>
-                  <li>Expand only if RevPP &gt; +4% and conversion holds</li>
+                  <li>HOLD below 100 bookings served the New Model price</li>
+                  <li>Expand only if revenue &gt; +4% and conversion holds</li>
                   <li>Fail if fallback rate ≥ 3% or pricing failures ≥ 2%</li>
                   <li>Fail if included/comp offers are billed</li>
                 </ul>
@@ -844,7 +856,7 @@
       </section>
 
       <!-- 14 FOUR SCREENS -->
-      <section class="slide" data-title="Four screens" data-notes="Demo order is fixed: Price Explanation → Pricing Controls → Pricing Test Results → Production Monitor. 2-minute story. Do not skip the simulated-data sentence on results.">
+      <section class="slide" data-title="Four screens" data-notes="Demo order is fixed: Price Explanation → Pricing Controls → Pricing Test Results → Production Monitor. 2-minute story. Do not skip the simulated-data sentence on results. Today the monitor says HOLD: 7 bookings served the New Model price, 100 needed.">
         <div class="bar"><h1>Four screens — the live walkthrough</h1><span class="pg">14 / 16</span></div>
         <div class="insight">The Streamlit lab is the same argument in product form. Walk the screens in this order; each one is an interview beat.</div>
         <div class="body">
@@ -862,12 +874,12 @@
             <div class="zone">
               <h3>3. Pricing Test Results</h3>
               <p class="small"><b>Story:</b> commercial impact. Out loud: simulated result using synthetic/public data.</p>
-              <p class="small" style="margin-top:10px">RevPP, conversion, average quoted price. n=500, live arm n=7. Not a live airline A/B test.</p>
+              <p class="small" style="margin-top:10px">Revenue per chargeable booking, purchase rate, average price paid. 222 chargeable of n=500, live arm n=7. Not a live airline A/B test.</p>
             </div>
             <div class="zone gold-edge">
               <h3>4. Production Monitor</h3>
               <p class="small"><b>Story:</b> HOLD / Return. Checkout fallback.</p>
-              <p class="small" style="margin-top:10px">Commercial, model, system, rules — then a giant Rollout Decision. Today: Return to Current Pricing.</p>
+              <p class="small" style="margin-top:10px">Commercial, model, system, rules — then a giant Rollout Decision. Today: HOLD, with 7 of the 100 live bookings needed to expand.</p>
             </div>
           </div>
         </div>
@@ -916,23 +928,23 @@
       </section>
 
       <!-- 16 CLOSE -->
-      <section class="slide" data-title="Recommendation" data-notes="Close on the governing thought. If they ask for GitHub: Dureduran/AirlineAncillaryPricingLab. If they want to click: this walkthrough + the four screens. Do not oversell the AUC.">
+      <section class="slide" data-title="Recommendation" data-notes="Close on the governing thought. If they ask for GitHub: Dureduran/AirlineAncillaryPricingLab. If they want to click: this walkthrough + the four screens. Do not oversell the AUC, or the +9.2%: it is the model's own estimate on simulated bookings.">
         <div class="bar"><h1>Recommendation</h1><span class="pg">16 / 16</span></div>
-        <div class="insight">Keep the decision system. Do not keep this New Model live. Retrain and re-test on a real offer log before any expansion past shadow.</div>
+        <div class="insight">Keep the decision system. Hold this New Model at 20% on SIN–LHR extra-legroom until at least 100 bookings have been served its price. Re-test on a real offer log before any wider expansion.</div>
         <div class="body">
           <div class="g2">
             <div class="zone navy gold-edge">
               <h3>What I would tell Revenue Management</h3>
-              <p style="font-size:22px;line-height:1.4;margin-top:8px">On synthetic/public data the New Model is not commercially healthy. Return to Current Pricing. The fixture on SIN–LHR looked encouraging; the batch did not. That disagreement is why we built a monitor instead of a score dashboard.</p>
+              <p style="font-size:22px;line-height:1.4;margin-top:8px">On synthetic/public data the New Model looks promising: +9.2% expected revenue on the 222 chargeable bookings. But that is its own estimate, all of the gain is extra baggage still in shadow, and only 7 bookings have been served its price. HOLD. A model is not expanded on seven bookings; that is why we built a monitor instead of a score dashboard.</p>
             </div>
             <div class="stack">
               <div class="zone pass-edge">
                 <h3>Keep</h3>
                 <p class="small">P(buy) on a grid · monotone price · Business Rules last · shadow ladder · four-layer fallback · HOLD / Return gates · leakage tests · USD, Current Pricing, New Model language.</p>
               </div>
-              <div class="zone fail-edge">
-                <h3>Do not keep live</h3>
-                <p class="small">This particular trained artifact, on this simulated log, at 20% traffic. Commercial impact −44.3% RevPP and −19.8 pp conversion vs a −2% / −3 pp contract.</p>
+              <div class="zone gold-edge">
+                <h3>Do not expand yet</h3>
+                <p class="small">This particular trained artifact, on this simulated log, stays at 20% traffic on one route and product. +9.2% revenue and +22.6 pp conversion clear the −2% / −3 pp contract, but they are estimates on 222 simulated bookings, with 7 served the New Model price.</p>
               </div>
               <div class="zone">
                 <h3>Leave-behinds</h3>
