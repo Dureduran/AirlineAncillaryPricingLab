@@ -114,6 +114,12 @@ def recommend(
         if customer and customer > 0
         else 0.0
     )
+    # Like-for-like: when Business Rules make the item free or unavailable, the
+    # customer pays nothing whichever system quoted it. Current Pricing gets the
+    # same outcome as the New Model: no purchase at a price and no revenue.
+    # current_price stays in the output as the quote Current Pricing would give.
+    if not rules.offered:
+        p_current = 0.0
 
     out = {
         "current_price": float(current),

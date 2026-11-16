@@ -43,7 +43,7 @@ st.markdown(
 )
 
 st.markdown(f"**{SECTIONS[0]}**")
-a, b = st.columns(2)
+a, b, live_col = st.columns(3)
 a.markdown(
     state_html("Revenue", f"{stats['revenue_impact']:+.1%}", report["commercial"]["revenue"]["state"]),
     unsafe_allow_html=True,
@@ -56,14 +56,29 @@ b.markdown(
     ),
     unsafe_allow_html=True,
 )
+live = report["live_sample"]
+live_col.markdown(
+    state_html(
+        "Bookings served the New Model price",
+        f"{live['value']:,} of {live['minimum']:,} needed",
+        live["state"],
+    ),
+    unsafe_allow_html=True,
+)
+st.caption(
+    f"Revenue and conversion compare both systems on the {stats['n_chargeable']:,} chargeable "
+    f"bookings out of {stats['n']:,}. The decision does not expand on fewer than "
+    f"{live['minimum']:,} bookings served the New Model price."
+)
 
 st.markdown(f"**{SECTIONS[1]}**")
 c, d = st.columns(2)
+accuracy = report["model_health"]["predictions_accurate"]
 c.markdown(
     state_html(
         "Predictions accurate",
-        report["model_health"]["predictions_accurate"]["state"].upper(),
-        report["model_health"]["predictions_accurate"]["state"],
+        accuracy["state"].upper() if accuracy["judged"] else "NOT JUDGED YET",
+        accuracy["state"],
     ),
     unsafe_allow_html=True,
 )

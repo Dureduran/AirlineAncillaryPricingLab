@@ -52,10 +52,13 @@ def test_page_uses_pipeline_not_hardcoded_eight_percent():
         assert word not in text
 
 
-def test_price_row_is_quoted_price_and_page_explains_the_basis():
-    assert "Average quoted price (USD)" in METRIC_ROWS
+def test_price_row_is_price_paid_and_page_explains_the_basis():
+    assert "Average price paid (USD)" in METRIC_ROWS
+    assert "Revenue per chargeable booking (USD)" in METRIC_ROWS
     assert all("selling price" not in row.lower() for row in METRIC_ROWS)
-    assert "TEST_RESULTS_BASIS" in PAGE.read_text(encoding="utf-8")
+    text = PAGE.read_text(encoding="utf-8")
+    assert "TEST_RESULTS_BASIS" in text
+    assert "n_chargeable" in text
 
 
 def test_did_not_rebuild_production_monitor():
