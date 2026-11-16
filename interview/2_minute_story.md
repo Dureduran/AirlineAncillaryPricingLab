@@ -15,9 +15,9 @@ Then show, in this order:
 "Revenue Management controls where and how aggressively it can operate — traffic percent, price band, pause, or Return to Current Pricing. Not per-passenger approval."
 
 **Pricing Test Results**  
-"We measure whether the New Model actually increases revenue versus Current Pricing without damaging conversion. Out loud: Simulated result using synthetic/public data."
+"We measure whether the New Model actually increases revenue versus Current Pricing without damaging conversion, on the same chargeable bookings for both. Out loud: Simulated result using synthetic/public data."
 
 **Production Monitor**  
-"If customer behaviour changes or model quality deteriorates, we HOLD expansion or Return to Current Pricing. Checkout still has a fallback: New Model → Current Pricing → simple rules → safe fixed price."
+"If customer behaviour changes or model quality deteriorates, we HOLD expansion or Return to Current Pricing. We also HOLD while fewer than 100 bookings have been served the New Model price. Checkout still has a fallback: New Model → Current Pricing → simple rules → safe fixed price."
 
 Done. Do not open with network-wide yield metrics or overbooking.

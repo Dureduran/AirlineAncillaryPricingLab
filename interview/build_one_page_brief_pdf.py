@@ -249,8 +249,8 @@ def build():
     screens = [
         ("1. Price Explanation", "Why this booking's extra-legroom price moved versus Current Pricing. Both prices in USD."),
         ("2. Pricing Controls", "Traffic percent, price bands, temporary caps. Not per-passenger approval."),
-        ("3. Pricing Test Results", "Revenue per passenger, conversion, average quoted price. Simulated comparison."),
-        ("4. Production Monitor", "Commercial, model, system, and rules health, then a Rollout Decision: HOLD / expand / return."),
+        ("3. Pricing Test Results", "Revenue per chargeable booking, purchase rate, average price paid, on the same bookings for both systems. Simulated comparison."),
+        ("4. Production Monitor", "Commercial, model, system, and rules health, then a Rollout Decision: HOLD / expand / return. No expansion below 100 bookings served the New Model price."),
     ]
     rows = [
         [Paragraph(title, s["label"]), Paragraph(desc, s["cell"])]
@@ -274,8 +274,8 @@ def build():
     walk = [
         ("Price Explanation", "Show why the New Model recommends a different extra-legroom price than Current Pricing on SIN-LHR Economy Basic, four days out. Both prices are in USD."),
         ("Pricing Controls", "Revenue Management sets traffic, bands, pause, or Return to Current Pricing. Not per-passenger approval."),
-        ("Pricing Test Results", "Ask whether revenue per passenger rose without damaging conversion. Simulated result using synthetic and public data."),
-        ("Production Monitor", "If behaviour drifts or quality drops, HOLD expansion or Return to Current Pricing. Checkout still has a fallback."),
+        ("Pricing Test Results", "Ask whether revenue rose without damaging conversion, on the bookings where a price is actually charged. Simulated result using synthetic and public data."),
+        ("Production Monitor", "If behaviour drifts, quality drops or too few bookings have been served the New Model price, HOLD expansion or Return to Current Pricing. Checkout still has a fallback."),
     ]
     walk_rows = [
         [Paragraph(title, s["label"]), Paragraph(desc, s["cell"])]
